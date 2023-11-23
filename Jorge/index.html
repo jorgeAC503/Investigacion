@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario con jQuery Validation y Bootstrap</title>
+    <!-- Incluye Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Incluye jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Incluye jQuery Validation -->
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <form id="miFormulario">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+
+            <div class="form-group">
+                <label for="correo">Correo electrónico:</label>
+                <input type="email" class="form-control" id="correo" name="correo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmarContrasena">Confirmar Contraseña:</label>
+                <input type="password" class="form-control" id="confirmarContrasena" name="confirmarContrasena" equalTo="#contrasena" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Agrega regla de validación personalizada para el campo de contraseña
+            $.validator.addMethod("customPassword", function(value, element) {
+                // La contraseña debe contener al menos una letra minúscula y una mayúscula
+                return /[a-z]/.test(value) && /[A-Z]/.test(value);
+            }, "La contraseña debe contener al menos una letra minúscula y una mayúscula.");
+
+            // Inicializa el formulario con jQuery Validation
+            $("#miFormulario").validate({
+                rules: {
+                    nombre: "required",
+                    correo: {
+                        required: true,
+                        email: true
+                    },
+                    contrasena: {
+                        required: true,
+                        customPassword: true
+                    },
+                    confirmarContrasena: {
+                        required: true,
+                        equalTo: "#contrasena"
+                    }
+                },
+                messages: {
+                    nombre: "Por favor, ingresa tu nombre",
+                    correo: {
+                        required: "Por favor, ingresa tu correo electrónico",
+                        email: "Por favor, ingresa un correo electrónico válido"
+                    },
+                    contrasena: {
+                        required: "Por favor, ingresa tu contraseña"
+                    },
+                    confirmarContrasena: {
+                        required: "Por favor, confirma tu contraseña",
+                        equalTo: "Las contraseñas no coinciden"
+                    }
+                },
+                // Manejo de estilos para los mensajes de error
+                errorClass: "error"
+            });
+        });
+    </script>
+
+</body>
+</html>
